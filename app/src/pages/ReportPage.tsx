@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useCartStore, calcItemCost, USD_TO_ARS } from '../store/cartStore'
 import { RiskBadge } from '../components/RiskBadge'
@@ -5,6 +6,7 @@ import { RiskBadge } from '../components/RiskBadge'
 export function ReportPage() {
   const navigate = useNavigate()
   const { items, clear } = useCartStore()
+  const [requested, setRequested] = useState(false)
 
   if (items.length === 0) {
     return (
@@ -121,6 +123,19 @@ export function ReportPage() {
         <div className="bg-amber-50 border border-amber-200 rounded-xl p-4 text-sm text-amber-800">
           ⚠️ Este informe es una simulación estimativa con fines informativos. Los valores de impuestos, aranceles y permisos deben verificarse con un despachante de aduana habilitado antes de operar.
         </div>
+
+        {requested ? (
+          <div className="w-full py-4 bg-slate-100 border border-slate-200 rounded-xl text-center text-slate-600 font-medium">
+            Resolviendo operación
+          </div>
+        ) : (
+          <button
+            onClick={() => setRequested(true)}
+            className="w-full py-4 bg-indigo-600 text-white rounded-xl font-bold text-lg hover:bg-indigo-700 transition-colors"
+          >
+            Solicitar gestión
+          </button>
+        )}
 
         <button
           onClick={handleNewSim}

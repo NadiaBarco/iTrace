@@ -1,12 +1,14 @@
-import type { Supplier } from '../types'
+import type { Supplier, ImportReadinessScore } from '../types'
+import { ImportReadinessCard } from './ImportReadinessCard'
 
 interface Props {
   suppliers: Supplier[]
   selected: Supplier
   onChange: (s: Supplier) => void
+  scores?: Record<string, ImportReadinessScore>
 }
 
-export function SupplierSelector({ suppliers, selected, onChange }: Props) {
+export function SupplierSelector({ suppliers, selected, onChange, scores }: Props) {
   return (
     <div className="space-y-2">
       {suppliers.map((s) => (
@@ -26,9 +28,14 @@ export function SupplierSelector({ suppliers, selected, onChange }: Props) {
             </div>
             <span className="font-bold text-indigo-700">USD {s.priceUSD}/u</span>
           </div>
-          <div className="flex gap-4 mt-1 text-xs text-slate-500">
-            <span>MOQ: {s.moq} unidades</span>
-            <span>{'⭐'.repeat(Math.round(s.rating))} {s.rating}</span>
+          <div className="flex items-center justify-between mt-1">
+            <div className="flex gap-4 text-xs text-slate-500">
+              <span>MOQ: {s.moq} unidades</span>
+              <span>{'⭐'.repeat(Math.round(s.rating))} {s.rating}</span>
+            </div>
+            {scores?.[s.id] && (
+              <ImportReadinessCard score={scores[s.id]} compact />
+            )}
           </div>
         </div>
       ))}

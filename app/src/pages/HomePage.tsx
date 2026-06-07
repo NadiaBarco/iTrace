@@ -4,11 +4,13 @@ import { SearchBar } from '../components/SearchBar'
 import { ProductCard } from '../components/ProductCard'
 import { products } from '../data/products'
 import { useCartStore } from '../store/cartStore'
+import { useProfileStore } from '../store/profileStore'
 
 export function HomePage() {
   const [query, setQuery] = useState('')
   const navigate = useNavigate()
   const cartCount = useCartStore((s) => s.items.length)
+  const profile = useProfileStore((s) => s.profile)
 
   const filtered = products.filter((p) =>
     p.name.toLowerCase().includes(query.toLowerCase()) ||
@@ -22,17 +24,28 @@ export function HomePage() {
           <h1 className="text-2xl font-bold text-indigo-700">iTrace</h1>
           <p className="text-xs text-slate-500">Simulador de importaciones para Argentina</p>
         </div>
-        <button
-          onClick={() => navigate('/cart')}
-          className="flex items-center gap-2 bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition-colors"
-        >
-          🛒 Carrito
-          {cartCount > 0 && (
-            <span className="bg-white text-indigo-700 text-xs font-bold px-2 py-0.5 rounded-full">
-              {cartCount}
-            </span>
-          )}
-        </button>
+        <div className="flex items-center gap-2">
+          <button
+            onClick={() => navigate('/profile')}
+            className="relative flex items-center gap-2 border border-slate-200 text-slate-600 px-3 py-2 rounded-lg hover:border-indigo-300 hover:text-indigo-700 transition-colors text-sm"
+          >
+            👤 Perfil
+            {!profile.isComplete && (
+              <span className="absolute -top-1 -right-1 w-2.5 h-2.5 bg-amber-400 rounded-full border-2 border-white" />
+            )}
+          </button>
+          <button
+            onClick={() => navigate('/cart')}
+            className="flex items-center gap-2 bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition-colors"
+          >
+            🛒 Carrito
+            {cartCount > 0 && (
+              <span className="bg-white text-indigo-700 text-xs font-bold px-2 py-0.5 rounded-full">
+                {cartCount}
+              </span>
+            )}
+          </button>
+        </div>
       </header>
 
       <main className="max-w-4xl mx-auto px-6 py-10">
